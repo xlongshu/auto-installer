@@ -20,7 +20,8 @@ text_plain='\033[0m'
 INFO="${text_green}[INFO ]:${text_plain}"
 WARN="${text_yellow}[WARN ]:${text_plain}"
 ERROR="${text_red}[ERROR]:${text_plain}"
-LOG_FILE=${LOG_FILE:-"~/auto_installer.log"}
+LOG_FILE=${LOG_FILE:-"/tmp/auto_installer.log"}
+echo "log file ${LOG_FILE}"
 #=================================================
 
 function log_info() {
@@ -68,6 +69,22 @@ function check_sys() {
         log_err "Not support OS: $(uname -a)." && return
     fi
     log_info "sys: ${release}"
+}
+
+# Get version
+function get_version() {
+    if [[ -s /etc/redhat-release ]]; then
+        grep -oE "[0-9.]+" /etc/redhat-release
+    else
+        grep -oE "[0-9.]+" /etc/issue
+    fi
+}
+
+# CentOS version
+function centos_version() {
+    local version="`get_version`"
+    local main_ver=${version%%.*}
+    echo ${main_ver}
 }
 
 # Disable selinux
