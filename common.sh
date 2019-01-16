@@ -1,8 +1,4 @@
 # common.sh
-#! /bin/bash
-
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
-export PATH
 
 #=================================================
 #	Description: Install common
@@ -49,9 +45,9 @@ function check_root() {
 
 # Check OS
 function check_sys() {
-    if [ -f /etc/redhat-release ]; then
+    if [[ -f /etc/redhat-release ]]; then
         release="centos"
-    elif [ -f /etc/issue ]; then
+    elif [[ -f /etc/issue ]]; then
         if cat /etc/issue | grep -Eqi "debian"; then
             release="debian"
         elif cat /etc/issue | grep -Eqi "ubuntu"; then
@@ -89,7 +85,7 @@ function centos_version() {
 
 # Disable selinux
 function disable_selinux() {
-    if [ -s /etc/selinux/config ] && grep 'SELINUX=enforcing' /etc/selinux/config; then
+    if [[ -s /etc/selinux/config ]] && grep 'SELINUX=enforcing' /etc/selinux/config; then
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
         setenforce 0
     fi

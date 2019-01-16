@@ -1,0 +1,11 @@
+
+# Package Files #
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+### Other
+.DS_Store
+*.log
+*.bak

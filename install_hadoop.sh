@@ -1,5 +1,5 @@
+#!/bin/bash
 # install_hadoop.sh
-#! /bin/bash
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -36,7 +36,7 @@ MYSQL_DRIVER_URL="http://central.maven.org/maven2/mysql/mysql-connector-java/5.1
 #=================================================
 
 
-if [ -f ./common.sh ]; then
+if [[ -f ./common.sh ]]; then
     echo ". ./common.sh"
     . ./common.sh
 else
@@ -77,9 +77,9 @@ function download_install() {
         target="${name_ver%%-*}"
     fi
 
-    if [ ! -d ${INSTALL_PREFIX}/${target} ]; then
+    if [[ ! -d ${INSTALL_PREFIX}/${target} ]]; then
         log_info "download ${dl_url}"
-        [ ! -f ${DOWNLOAD_DIR}/${name_tar_gz} ] && wget -c -T45 --no-check-certificate -P ${DOWNLOAD_DIR} ${dl_url}
+        [[ ! -f ${DOWNLOAD_DIR}/${name_tar_gz} ]] && wget -c -T45 --no-check-certificate -P ${DOWNLOAD_DIR} ${dl_url}
 
         log_info "tar -zxf ${name_tar_gz}"
         tar -zxf ${DOWNLOAD_DIR}/${name_tar_gz} -C ${INSTALL_PREFIX}
@@ -99,7 +99,7 @@ function set_env() {
     mkdir -p ${CONF_DIR}/common ${CONF_DIR}/zookeeper ${CONF_DIR}/hbase ${CONF_DIR}/hive
     chown -R ${APP_USER} ${DATA_DIR}
 
-    if [ -f ${CONF_DIR}/hadoop_env.sh ]; then
+    if [[ -f ${CONF_DIR}/hadoop_env.sh ]]; then
         log_warn "bak ${CONF_DIR}/hadoop_env.sh"
         mv -f ${CONF_DIR}/hadoop_env.sh ${CONF_DIR}/hadoop_env.sh.bak
     fi
@@ -143,7 +143,7 @@ EOF
     chmod +x ${CONF_DIR}/hadoop_env.sh
     . ${CONF_DIR}/hadoop_env.sh
 
-    if [ -f /home/${APP_USER}/.bashrc ]; then
+    if [[ -f /home/${APP_USER}/.bashrc ]]; then
         log_info "add [${CONF_DIR}/hadoop_env.sh] into [/home/${APP_USER}/.bashrc]"
         cat >> /home/${APP_USER}/.bashrc <<- EOF
 
@@ -167,7 +167,7 @@ function config_hadoop() {
 
     # zookeeper
     echo 1 > ${ZOO_LOG_DIR}/myid
-    if [ -f ${CONF_DIR}/zookeeper/zoo.cfg ]; then
+    if [[ -f ${CONF_DIR}/zookeeper/zoo.cfg ]]; then
         log_warn "bak ${CONF_DIR}/zookeeper/zoo.cfg"
         mv -f ${CONF_DIR}/zookeeper/zoo.cfg ${CONF_DIR}/zookeeper/zoo.cfg.bak
     fi

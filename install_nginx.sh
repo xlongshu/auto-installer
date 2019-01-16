@@ -1,5 +1,5 @@
+#!/bin/bash
 # install_nginx.sh
-#! /bin/bash
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
@@ -15,7 +15,7 @@ export PATH
 LOG_FILE="/tmp/nginx_install.log"
 #=================================================
 
-if [ -f ./common.sh ]; then
+if [[ -f ./common.sh ]]; then
     echo ". ./common.sh"
     . ./common.sh
 else
@@ -27,7 +27,7 @@ fi
 
 function install_nginx() {
     if [[ "$release" == "centos" ]]; then
-        if [ -f /etc/yum.repos.d/nginx.repo ]; then
+        if [[ -f /etc/yum.repos.d/nginx.repo ]]; then
             log_warn "bak /etc/yum.repos.d/nginx.repo"
             mv -f /etc/yum.repos.d/nginx.repo /etc/yum.repos.d/nginx.repo.bak
         fi
