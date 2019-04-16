@@ -17,12 +17,21 @@
 <!-- Put site-specific property overrides in this file. -->
 
 <configuration>
-    <property>
-        <name>fs.defaultFS</name>
-        <value>hdfs://replace_hadoop_host:9000</value>
-    </property>
-    <property>
-        <name>hadoop.tmp.dir</name>
-        <value>replace_hadoop_tmp_dir</value>
-    </property>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://replace_hadoop_host:9000</value>
+  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>replace_hadoop_tmp_dir</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.root.hosts</name>
+    <value>*</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.root.groups</name>
+    <value>*</value>
+  </property>
 </configuration>

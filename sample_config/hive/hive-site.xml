@@ -7,12 +7,23 @@
   <!-- Hive Execution Parameters -->
 
   <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>/user/hive/warehouse</value>
+    <description>location of default database for the warehouse</description>
+  </property>
+  <property>
+    <name>hive.exec.scratchdir</name>
+    <value>/tmp/hive</value>
+    <description>HDFS root scratch dir for Hive jobs which gets created with write all (733) permission. For each connecting user, an HDFS scratch dir: ${hive.exec.scratchdir}/&lt;username&gt; is created, with ${hive.scratch.dir.permission}.</description>
+  </property>
+
+  <property>
     <name>javax.jdo.option.ConnectionURL</name>
-    <value>replace_hive_jdbc_url</value>
+    <value>jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionDriverName</name>
-    <value>replace_hive_jdbc_driver</value>
+    <value>com.mysql.jdbc.Driver</value>
   </property>
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
@@ -22,4 +33,17 @@
     <name>javax.jdo.option.ConnectionPassword</name>
     <value>hive123456</value>
   </property>
+
+  <property>
+    <name>hive.server2.thrift.port</name>
+    <value>10000</value>
+    <description>Port number of HiveServer2 Thrift interface when hive.server2.transport.mode is 'binary'.</description>
+  </property>
+
+  <property>
+    <name>hive.security.authorization.enabled</name>
+    <value>false</value>
+    <description>enable or disable the Hive client authorization</description>
+  </property>
+
 </configuration>
