@@ -56,6 +56,7 @@ function get_archive_dir_name() {
     local full_path=$1
     local archive_name="${full_path##*/}"
     local dir_name="${archive_name%.tar.gz}"
+    dir_name="${dir_name%.tgz}"
     dir_name="${dir_name%.zip}"
     echo ${dir_name}
 }
@@ -65,6 +66,7 @@ function get_name_var() {
     local archive_name="${full_path##*/}"
     # apache-maven-x.y.z-bin.tar.gz, apache-maven-x.y.z-bin.zip
     local name_ver="${archive_name%.tar.gz}"
+    name_ver="${name_ver%.tgz}"
     name_ver="${name_ver%.zip}"
 
     # apache-maven-x.y.z-bin

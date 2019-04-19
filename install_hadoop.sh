@@ -28,12 +28,13 @@ HADOOP_HOST='localhost' # 127.0.0.1, 192.168.56.1
 #=================================================
 MIRRORS="https://mirrors.tuna.tsinghua.edu.cn/apache"
 # http://mirrors.ustc.edu.cn/apache
-# http://archive.apache.org/dist
+APACHE_DIST="http://archive.apache.org/dist"
 
-ZK_DL_URL="$MIRRORS/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz"
+ZK_DL_URL="$APACHE_DIST/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz"
 HADOOP_DL_URL="$MIRRORS/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz"
-HBASE_DL_URL="$MIRRORS/hbase/1.4.9/hbase-1.4.9-bin.tar.gz"
 HIVE_DL_URL="$MIRRORS/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz"
+HBASE_DL_URL="$MIRRORS/hbase/1.4.9/hbase-1.4.9-bin.tar.gz"
+SPARK_DL_URL="$MIRRORS/spark/spark-2.4.1/spark-2.4.1-bin-hadoop2.7.tgz"
 
 # mysql: com.mysql.jdbc.Driver, jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true&amp;useSSL=false
 DRIVER_DL_URL="http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"
@@ -94,7 +95,7 @@ function download_install() {
 }
 
 function set_env_hadoop() {
-    mkdir -p ${DATA_DIR} ${DATA_DIR}/zookeeper ${DATA_DIR}/hadoop ${DATA_DIR}/hbase
+    mkdir -p ${DATA_DIR} ${DATA_DIR}/zookeeper ${DATA_DIR}/hadoop ${DATA_DIR}/hive ${DATA_DIR}/hbase
     mkdir -p ${CONF_DIR}/hadoop ${CONF_DIR}/zookeeper ${CONF_DIR}/hbase ${CONF_DIR}/hive
 
     if [[ -f ${CONF_DIR}/env_hadoop.sh ]]; then
@@ -131,16 +132,21 @@ export HADOOP_YARN_HOME=\${HADOOP_HOME}
 export HADOOP_CONF_DIR=\${HADOOP_CONF_PREFIX}/hadoop
 export YARN_CONF_DIR=\${HADOOP_CONF_DIR}
 
+# Hive
+export HIVE_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${HIVE_DL_URL})
+export PATH=\${HIVE_HOME}/bin:\$PATH
+export HIVE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hive
+
 # Hbase
 export HBASE_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${HBASE_DL_URL})
 export PATH=\${HBASE_HOME}/bin:\$PATH
 export HBASE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hbase
 export HBASE_MANAGES_ZK=false
 
-# Hive
-export HIVE_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${HIVE_DL_URL})
-export PATH=\${HIVE_HOME}/bin:\$PATH
-export HIVE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hive
+# Spark
+export SPARK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${SPARK_DL_URL})
+export PATH=\${SPARK_HOME}/bin:\$PATH:\${SPARK_HOME}/sbin
+export SPARK_CONF_DIR=\${HADOOP_CONF_PREFIX}/spark
 
 EOF
 
@@ -167,12 +173,14 @@ function config_hadoop() {
     # load ${CONF_DIR}/env_hadoop.sh
     cp -rf ${HADOOP_HOME}/etc/hadoop/* ${CONF_DIR}/hadoop
     cp -rf ${ZK_HOME}/conf/* ${CONF_DIR}/zookeeper
-    cp -rf ${HBASE_HOME}/conf/* ${CONF_DIR}/hbase
     cp -rf ${HIVE_HOME}/conf/* ${CONF_DIR}/hive
+    cp -rf ${HBASE_HOME}/conf/* ${CONF_DIR}/hbase
 
     cp -rf ${BASE_DIR}/sample_config/hadoop/* ${CONF_DIR}/hadoop
-    cp -rf ${BASE_DIR}/sample_config/hbase/* ${CONF_DIR}/hbase
     cp -rf ${BASE_DIR}/sample_config/hive/* ${CONF_DIR}/hive
+    cp -rf ${BASE_DIR}/sample_config/hbase/* ${CONF_DIR}/hbase
+
+    cp -rf ${BASE_DIR}/sample_config/sbin/* ${CONF_DIR}/
 
     replace_str ${CONF_DIR}/hadoop/core-site.xml "replace_hadoop_host" "${HADOOP_HOST}"
     replace_str ${CONF_DIR}/hadoop/core-site.xml "replace_hadoop_tmp_dir" "${DATA_DIR}/hadoop"
