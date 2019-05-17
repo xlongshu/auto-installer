@@ -33,8 +33,8 @@ APACHE_DIST="http://archive.apache.org/dist"
 ZK_DL_URL="$APACHE_DIST/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz"
 HADOOP_DL_URL="$MIRRORS/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz"
 HIVE_DL_URL="$MIRRORS/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz"
-HBASE_DL_URL="$MIRRORS/hbase/1.4.9/hbase-1.4.9-bin.tar.gz"
 SPARK_DL_URL="$MIRRORS/spark/spark-2.4.1/spark-2.4.1-bin-hadoop2.7.tgz"
+HBASE_DL_URL="$MIRRORS/hbase/1.4.9/hbase-1.4.9-bin.tar.gz"
 
 # mysql: com.mysql.jdbc.Driver, jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true&amp;useSSL=false
 DRIVER_DL_URL="http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar"
@@ -42,7 +42,7 @@ DRIVER_DL_URL="http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.40
 
 CUR_DIR=$(pwd)
 BASE_DIR="$(cd "$(dirname "$0")"; pwd)"
-cd ${BASE_DIR}
+cd "${BASE_DIR}"
 
 if [[ -f ./common.sh ]]; then
     echo ". ./common.sh"
@@ -96,7 +96,7 @@ function download_install() {
 
 function set_env_hadoop() {
     mkdir -p ${DATA_DIR} ${DATA_DIR}/zookeeper ${DATA_DIR}/hadoop ${DATA_DIR}/hive ${DATA_DIR}/hbase
-    mkdir -p ${CONF_DIR}/hadoop ${CONF_DIR}/zookeeper ${CONF_DIR}/hbase ${CONF_DIR}/hive
+    mkdir -p ${CONF_DIR}/hadoop ${CONF_DIR}/zookeeper ${CONF_DIR}/hive ${CONF_DIR}/spark ${CONF_DIR}/hbase
 
     if [[ -f ${CONF_DIR}/env_hadoop.sh ]]; then
         log_warn "Backup [${CONF_DIR}/env_hadoop.sh] !"
@@ -142,7 +142,7 @@ export HIVE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hive
 
 # Spark
 export SPARK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${SPARK_DL_URL})
-export PATH=\${SPARK_HOME}/bin:\$PATH:\${SPARK_HOME}/sbin
+export PATH=\$PATH:\${SPARK_HOME}/bin:\${SPARK_HOME}/sbin
 export SPARK_CONF_DIR=\${HADOOP_CONF_PREFIX}/spark
 
 # Hbase
@@ -177,6 +177,7 @@ function config_hadoop() {
     cp -rf ${HADOOP_HOME}/etc/hadoop/* ${CONF_DIR}/hadoop
     cp -rf ${ZK_HOME}/conf/* ${CONF_DIR}/zookeeper
     cp -rf ${HIVE_HOME}/conf/* ${CONF_DIR}/hive
+    cp -rf ${SPARK_HOME}/conf/* ${CONF_DIR}/spark
     cp -rf ${HBASE_HOME}/conf/* ${CONF_DIR}/hbase
 
     cp -rf ${BASE_DIR}/sample_config/hadoop/* ${CONF_DIR}/hadoop
