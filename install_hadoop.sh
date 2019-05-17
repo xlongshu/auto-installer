@@ -111,6 +111,9 @@ export HADOOP_INSTALL_PREFIX=${INSTALL_PREFIX}
 export HADOOP_DATA_PREFIX=${DATA_DIR}
 export HADOOP_CONF_PREFIX=${CONF_DIR}
 
+export HADOOP_SSH_OPTS="-p 22"
+export HADOOP_HEAPSIZE=600
+
 # ZooKeeper
 export ZK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${ZK_DL_URL})
 export ZOOBINDIR=\${ZK_HOME}/bin
@@ -137,16 +140,16 @@ export HIVE_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${HIVE_DL_URL})
 export PATH=\${HIVE_HOME}/bin:\$PATH
 export HIVE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hive
 
+# Spark
+export SPARK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${SPARK_DL_URL})
+export PATH=\${SPARK_HOME}/bin:\$PATH:\${SPARK_HOME}/sbin
+export SPARK_CONF_DIR=\${HADOOP_CONF_PREFIX}/spark
+
 # Hbase
 export HBASE_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${HBASE_DL_URL})
 export PATH=\${HBASE_HOME}/bin:\$PATH
 export HBASE_CONF_DIR=\${HADOOP_CONF_PREFIX}/hbase
 export HBASE_MANAGES_ZK=false
-
-# Spark
-export SPARK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${SPARK_DL_URL})
-export PATH=\${SPARK_HOME}/bin:\$PATH:\${SPARK_HOME}/sbin
-export SPARK_CONF_DIR=\${HADOOP_CONF_PREFIX}/spark
 
 EOF
 
