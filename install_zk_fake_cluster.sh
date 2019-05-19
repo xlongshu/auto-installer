@@ -62,7 +62,8 @@ echo "ZK_HOME=\${ZK_HOME}"
 export ZOOBINDIR=\${ZK_HOME}/bin
 export PATH=\${ZOOBINDIR}:\$PATH
 
-if [[ "\$(uname)" =~ "MINGW" ]]; then
+# windows unix
+if [[ -e "\${WINDIR}" ]]; then
     echo "Load \${ZOOBINDIR}/zkEnv.sh"
     . "\${ZOOBINDIR}/zkEnv.sh"
     export CLASSPATH=\$(cygpath -wp "\${CLASSPATH}")
@@ -117,7 +118,8 @@ echo "ZK_HOME=\${ZK_HOME}"
 export ZOOBINDIR=\${ZK_HOME}/bin
 export PATH=\${ZOOBINDIR}:\$PATH
 
-if [[ "\$(uname)" =~ "MINGW" ]]; then
+# windows unix
+if [[ -e "\${WINDIR}" ]]; then
     echo "Load \${ZOOBINDIR}/zkEnv.sh"
     . "\${ZOOBINDIR}/zkEnv.sh"
     export CLASSPATH=\$(cygpath -wp "\${CLASSPATH}")
@@ -192,6 +194,7 @@ zk_name_ver="${zk_tar_gz%%.tar.gz}"
 if [[ $# -lt 1 ]]; then
     log_print E "Usage: $(basename "$0") </youpath/zookeeper-x.y.z.tar.gz> [/youpath/exist_zk_prefix]"
     log_print W "zk_tar_gz_apth 'local tar.gz', 'local path', 'http url'"
+    log_print W "Example: $(basename "$0") /youpath/zookeeper-3.4.12.tar.gz"
     log_print W "Example: $(basename "$0") https://mirrors.aliyun.com/apache/zookeeper/stable/zookeeper-3.4.13.tar.gz"
     exit 0
 fi
@@ -203,6 +206,15 @@ elif [[ "x$2" != "x" ]]; then
 fi
 ZK_INSTALL_PREFIX=$(readlink -f "${ZK_INSTALL_PREFIX}")
 
-
-pre_install
-install_zk
+clear
+log_print I "Install [${zk_tar_gz}] into [${ZK_INSTALL_PREFIX}] ..."
+log_print W "Are you sure install zkCluster? (y/n) "
+read -p "(Default: n):" answer
+[ -z ${answer} ] && answer="n"
+if [ "${answer}" == "y" ] || [ "${answer}" == "Y" ]; then
+    log_print I "Start install ${zk_tar_gz} ..."
+    pre_install
+    install_zk
+else
+    log_print I "Nothing to do ..."
+fi

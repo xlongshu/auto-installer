@@ -14,6 +14,7 @@ export PATH
 
 #=================================================
 APP_USER="hadoop"
+ADD_APP_USER="false"
 JAVA_VER=8 # 7, 8
 DOWNLOAD_DIR=/data/download
 INSTALL_PREFIX=/opt/app
@@ -33,7 +34,7 @@ APACHE_DIST="http://archive.apache.org/dist"
 ZK_DL_URL="$APACHE_DIST/zookeeper/zookeeper-3.4.13/zookeeper-3.4.13.tar.gz"
 HADOOP_DL_URL="$MIRRORS/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz"
 HIVE_DL_URL="$MIRRORS/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz"
-SPARK_DL_URL="$MIRRORS/spark/spark-2.4.1/spark-2.4.1-bin-hadoop2.7.tgz"
+SPARK_DL_URL="$MIRRORS/spark/spark-2.3.3/spark-2.3.3-bin-hadoop2.7.tgz"
 HBASE_DL_URL="$MIRRORS/hbase/1.4.9/hbase-1.4.9-bin.tar.gz"
 
 # mysql: com.mysql.jdbc.Driver, jdbc:mysql://localhost:3306/hive?createDatabaseIfNotExist=true&amp;useSSL=false
@@ -112,7 +113,7 @@ export HADOOP_DATA_PREFIX=${DATA_DIR}
 export HADOOP_CONF_PREFIX=${CONF_DIR}
 
 export HADOOP_SSH_OPTS="-p 22"
-export HADOOP_HEAPSIZE=600
+#export HADOOP_HEAPSIZE=600
 
 # ZooKeeper
 export ZK_HOME=\${HADOOP_INSTALL_PREFIX}/$(get_name_var ${ZK_DL_URL})
@@ -183,8 +184,10 @@ function config_hadoop() {
     cp -rf ${BASE_DIR}/sample_config/hadoop/* ${CONF_DIR}/hadoop
     cp -rf ${BASE_DIR}/sample_config/hive/* ${CONF_DIR}/hive
     cp -rf ${BASE_DIR}/sample_config/hbase/* ${CONF_DIR}/hbase
+    cp -f ${BASE_DIR}/sample_config/hive/hive-site.client.xml ${CONF_DIR}/spark/
 
     cp -rf ${BASE_DIR}/sample_config/sbin/* ${CONF_DIR}/
+    chmod +x ${CONF_DIR}/*.sh
 
     replace_str ${CONF_DIR}/hadoop/core-site.xml "replace_hadoop_host" "${HADOOP_HOST}"
     replace_str ${CONF_DIR}/hadoop/core-site.xml "replace_hadoop_tmp_dir" "${DATA_DIR}/hadoop"
@@ -221,5 +224,22 @@ EOF
 }
 
 #=================================================
-#check_sys
+clear
+check_sys
 #check_root
+
+# if [[ "ture" == ${ADD_APP_USER} ]]; then
+#     add_appuser
+# else
+#     log_info "user: $(id -un)"
+# fi
+
+# download_install $ZK_DL_URL
+# download_install $HADOOP_DL_URL
+# download_install $HIVE_DL_URL
+# download_install $SPARK_DL_URL
+# download_install $HBASE_DL_URL
+
+# set_env_hadoop
+
+# config_hadoop

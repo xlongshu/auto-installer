@@ -7,8 +7,8 @@
 #=================================================
 
 
-ADD_APP_USER="false"
 APP_USER=${APP_USER:-"admin"}
+ADD_APP_USER=${ADD_APP_USER:-"ture"}
 #=================================================
 text_red='\033[0;31m'
 text_green='\033[0;32m'
@@ -152,7 +152,7 @@ function check_sys() {
     elif cat /proc/version | grep -Eqi "centos|red hat|redhat"; then
         release="centos"
     else
-        log_err "Not support OS: $(uname -a)." && return
+        log_err "Not support OS: $(uname -os)."
     fi
     log_info "sys: ${release}"
 }
